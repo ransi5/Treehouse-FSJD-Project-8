@@ -1,0 +1,96 @@
+extends layout
+
+block content
+  h1= title
+
+  a(class="button" href="books/new" style={display:'inline-block'}) Create New Book
+  form(method="get" action="/books/search/query" name="query" style={display:'inline-block', float:'right'})
+    input(name="search" type="text" id="search" placeholder="Search Books" style={padding:'9px'})
+    input(name="page" type="hidden" id="page" value=page)
+    input(name="perpage" type="hidden" id="perpage" value=perpage)
+    input(type="submit" style={margin:'0px'} value="Search")
+
+  if deleted == 1
+    p(style={color:'blue'}) Book deleted successfully!!!
+  else if deleted < 1
+    p(style={color:'red'}) Error deleting book from Database!!!
+  else if errors
+    p(style={color:'red'}) Error deleting book from Database!!!
+    each error in errors
+      p(style={color:'red', margin:'3px 0px auto'})= error.message
+
+  div.stats
+    span Books found: &ensp;#{results}&emsp;&emsp;&emsp;&emsp;&emsp; Pages: &ensp;#{count}
+    - var page = page > count ? count : page;
+    form(method="get" action="/books/search/query" name="filter" style={display:'inline-block', float:'right'})
+      input(name="search" type="hidden" id="search" value=searchQ)
+      input(name="page" type="hidden" id="page" value=page)
+      input(name="perpage" type="text" id="perpage" value=perpage)
+      input(type="submit" style={display:'none'} value="Search")
+
+
+  table
+    thead
+      tr
+        th  Title
+        th  Author
+        th  Genre
+        th  Year
+    tbody
+      if count == 0
+        tr
+          td No Results found
+      else
+        each book in books
+          - var url = book.id;
+          tr
+            td: a(href="/book/" + url)= book.title
+            td= book.author
+            td= book.genre
+            td= book.year
+
+
+
+  ul.pages
+
+    li.page
+      - var url = "/books/search/query?search=" + searchQ +"&page=" + (page - 1) +"&perpage=" + perpage;
+      a(href=url) <<
+    div.page-wrapper
+      if count <= 5
+        - var i = 1;
+        while i <= count
+          li.page(class={active: i == page})
+            - var url = "/books/search/query?search=" + searchQ +"&page=" + i +"&perpage=" + perpage;
+            a(href=url)= i++
+
+      if count > 5 && page <= 3
+        - var i = 1;
+        while i <= 5
+          li.page(class={active: i == page})
+            - var url = "/books/search/query?search=" + searchQ +"&page=" + i +"&perpage=" + perpage;
+            a(href=url)= i++
+        li.page . . . . .
+
+      if count > 5 && page > 3 && page < (count - 2)
+        li.page . . .
+        - var i = page - 2;
+        - var maxpage = i + 5;
+        while i <= maxpage
+          li.page(class={active: i == page})
+            - var url = "/books/search/query?search=" + searchQ +"&page=" + i +"&perpage=" + perpage;
+            a(href=url)= i++
+        li.page . . .
+
+      if count > 5 && page > 3 && page >= (count - 2)
+        li.page . . .
+        - var i = count - 5;
+        while i <= count
+          li.page(class={active: i == page})
+            - var url = "/books/search/query?search=" + searchQ +"&page=" + i +"&perpage=" + perpage;
+            a(href=url)= i++
+
+
+    li.page
+      - var url = "/books/search/query?search=" + searchQ +"&page=" + (page + 1) +"&perpage=" + perpage;
+      a(href=url) >>

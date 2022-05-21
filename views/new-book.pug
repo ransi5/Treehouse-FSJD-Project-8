@@ -1,0 +1,27 @@
+extends layout
+
+block content
+
+  h1= title
+  if updated
+    p(style={color:'blue'}) Database updated successfully!!!
+  else if errors
+    each error in errors
+      p(style={color:'red', margin:'3px 0px auto'})= error.message
+  else 
+    p(style={color:'red'}) Error updating Database!!!
+  form(method="post" action="/books/new")
+    p
+      label(for="title") Title
+      input(name="title" type="text" id="title")
+    p
+      label(for="author") Author
+      input(name="author" type="text" id="author")
+    p
+      label(for="genre") Genre
+      input(name="genre" type="text" id="genre")
+    p
+      label(for="year") Year
+      input(name="year" type="text" id="year")
+    p:  input(type="submit" value="Create New Book")
+    p:  a(class="button" href="/books") Cancel
