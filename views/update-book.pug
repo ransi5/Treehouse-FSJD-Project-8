@@ -3,6 +3,7 @@ extends layout
 block content
 
   h1= book.title
+
   - var url = "/book/" + book.id;
   if updated
     if updated == 1

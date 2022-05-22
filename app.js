@@ -46,7 +46,6 @@ app.use(function(req, res, next) {
   err.status = 404;
   err.name = "404 - Page not found"
   next(err);
-  // next(createError(404));
 });
 
 // error handler

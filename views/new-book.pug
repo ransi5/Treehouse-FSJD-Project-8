@@ -3,13 +3,15 @@ extends layout
 block content
 
   h1= title
+  
   if updated
     p(style={color:'blue'}) Database updated successfully!!!
   else if errors
     each error in errors
       p(style={color:'red', margin:'3px 0px auto'})= error.message
-  else 
+  else if updated.length < 2
     p(style={color:'red'}) Error updating Database!!!
+
   form(method="post" action="/books/new")
     p
       label(for="title") Title

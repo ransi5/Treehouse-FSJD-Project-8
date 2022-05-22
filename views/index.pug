@@ -3,8 +3,9 @@ extends layout
 block content
   h1= title
 
-  a(class="button" href="books/new" style={display:'inline-block'}) Create New Book
-  form(method="get" action="/books/search/query" name="query" style={display:'inline-block', float:'right'})
+  a(class="button" href="/books/new" style={display:'inline-block'}) Create New Book
+
+  form(method="get" action="/books/query" name="query" style={display:'inline-block', float:'right'})
     input(name="search" type="text" id="search" placeholder="Search Books" style={padding:'9px'})
     input(name="page" type="hidden" id="page" value=page)
     input(name="perpage" type="hidden" id="perpage" value=perpage)
@@ -22,12 +23,11 @@ block content
   div.stats
     span Books found: &ensp;#{results}&emsp;&emsp;&emsp;&emsp;&emsp; Pages: &ensp;#{count}
     - var page = page > count ? count : page;
-    form(method="get" action="/books/search/query" name="filter" style={display:'inline-block', float:'right'})
+    form(method="get" action="/books/query" name="filter" style={display:'inline-block', float:'right'})
       input(name="search" type="hidden" id="search" value=searchQ)
       input(name="page" type="hidden" id="page" value=page)
       input(name="perpage" type="text" id="perpage" value=perpage)
       input(type="submit" style={display:'none'} value="Search")
-
 
   table
     thead
@@ -49,26 +49,24 @@ block content
             td= book.genre
             td= book.year
 
-
-
   ul.pages
 
     li.page
-      - var url = "/books/search/query?search=" + searchQ +"&page=" + (page - 1) +"&perpage=" + perpage;
+      - var url = "/books/query?search=" + searchQ +"&page=" + (page - 1) +"&perpage=" + perpage;
       a(href=url) <<
     div.page-wrapper
       if count <= 5
         - var i = 1;
         while i <= count
           li.page(class={active: i == page})
-            - var url = "/books/search/query?search=" + searchQ +"&page=" + i +"&perpage=" + perpage;
+            - var url = "/books/query?search=" + searchQ +"&page=" + i +"&perpage=" + perpage;
             a(href=url)= i++
 
       if count > 5 && page <= 3
         - var i = 1;
         while i <= 5
           li.page(class={active: i == page})
-            - var url = "/books/search/query?search=" + searchQ +"&page=" + i +"&perpage=" + perpage;
+            - var url = "/books/query?search=" + searchQ +"&page=" + i +"&perpage=" + perpage;
             a(href=url)= i++
         li.page . . . . .
 
@@ -78,7 +76,7 @@ block content
         - var maxpage = i + 5;
         while i <= maxpage
           li.page(class={active: i == page})
-            - var url = "/books/search/query?search=" + searchQ +"&page=" + i +"&perpage=" + perpage;
+            - var url = "/books/query?search=" + searchQ +"&page=" + i +"&perpage=" + perpage;
             a(href=url)= i++
         li.page . . .
 
@@ -87,10 +85,10 @@ block content
         - var i = count - 5;
         while i <= count
           li.page(class={active: i == page})
-            - var url = "/books/search/query?search=" + searchQ +"&page=" + i +"&perpage=" + perpage;
+            - var url = "/books/query?search=" + searchQ +"&page=" + i +"&perpage=" + perpage;
             a(href=url)= i++
 
 
     li.page
-      - var url = "/books/search/query?search=" + searchQ +"&page=" + (page + 1) +"&perpage=" + perpage;
+      - var url = "/books/query?search=" + searchQ +"&page=" + (page + 1) +"&perpage=" + perpage;
       a(href=url) >>
