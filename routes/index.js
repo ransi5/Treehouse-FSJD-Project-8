@@ -89,12 +89,21 @@ router.post('/books/new', async (req, res) => {
 
 /* GET route to render the selected book and update form */
 
-router.get('/book/:id', async (req, res) => {
-  let query = req.params.id;
-  let book = await models.Book.findByPk(query);
-  res.render('update-book', {
-    book: book,
-  });
+router.get('/book/:id', async (req, res, next) => {
+  try {
+    let query = req.params.id;
+    let book = await models.Book.findByPk(query);
+    if (book) {
+      res.render('update-book', { book: book });
+    } else {
+      const err = new Error("Sorry! We couldn't find the page you were looking for.");
+      err.status = 404;
+      err.name = "404 - Page not found"
+      next(err);
+    }
+  } catch (e) {
+    next(e)
+  }
 });
 
 /* POST route to update Database and success and error messages */
@@ -113,7 +122,6 @@ router.post('/book/:id', async (req, res) => {
     });
 
     let book = await models.Book.findByPk(query);
-
     res.render('update-book', { book: book, updated: updated});
   } catch (error) {
     let book = await models.Book.findByPk(query);
