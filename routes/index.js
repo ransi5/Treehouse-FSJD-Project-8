@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var models = require('../models/index');
 const querystring = require('querystring');
-const { Op } = require('sequelize'); //to get `sequelize.Op` model for `findAndCount` function
+const { Op } = require('sequelize'); //to access `sequelize.Op` method for `findAndCount` function
 
 /* GET home page to redirect to `/books`. */
 
@@ -96,10 +96,7 @@ router.get('/book/:id', async (req, res, next) => {
     if (book) {
       res.render('update-book', { book: book });
     } else {
-      const err = new Error("Sorry! We couldn't find the page you were looking for.");
-      err.status = 404;
-      err.name = "404 - Page not found"
-      next(err);
+      res.render('page-not-found');
     }
   } catch (e) {
     next(e)
@@ -164,6 +161,11 @@ router.post('/book/:id/delete', async (req, res) => {
     });
   }
 });
+
+// page not found route handle
+router.all('*', (req, res) => {
+    res.render('page-not-found');
+})
 
 /* `findAndCount` function to search all columns in Book model with `findAndCountAll` method */
 
